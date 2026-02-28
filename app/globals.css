@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+@import 'tailwindcss';
+
+@layer base {
+  :root {
+    /* Sci-Fi Dark Mode - Pantone Inspired */
+    --background: #0a0e27;
+    --foreground: #e8f0ff;
+    --primary: #00ffff;
+    --secondary: #8b5cf6;
+    --accent: #ff006e;
+    --muted: #1e293b;
+    --border: #1e3a5f;
+    --card: #0f1626;
+    --cyan-neon: #00ffff;
+    --violet-glow: #8b5cf6;
+    --magenta-pulse: #ff006e;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-mono;
+  }
+}
+
+@layer components {
+  .heading-xl {
+    @apply text-4xl md:text-6xl font-bold tracking-tighter text-balance;
+  }
+
+  .heading-lg {
+    @apply text-3xl md:text-4xl font-bold tracking-tight text-balance;
+  }
+
+  .heading-md {
+    @apply text-2xl md:text-3xl font-semibold tracking-tight;
+  }
+
+  .text-accent-cyan {
+    @apply text-cyan-neon;
+  }
+
+  .text-accent-violet {
+    @apply text-violet-glow;
+  }
+
+  .text-accent-magenta {
+    @apply text-magenta-pulse;
+  }
+
+  .glow-cyan {
+    @apply shadow-lg shadow-cyan-500/50;
+  }
+
+  .glow-violet {
+    @apply shadow-lg shadow-violet-500/50;
+  }
+
+  .glow-magenta {
+    @apply shadow-lg shadow-pink-500/50;
+  }
+
+  .sci-fi-border {
+    @apply border border-cyan-neon/30 rounded;
+  }
+}

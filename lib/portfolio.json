@@ -1,0 +1,58 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "title": "Enterprise Cloud Migration",
+      "description": "Successfully migrated a Fortune 500 company's infrastructure to cloud, reducing operational costs by 40% and improving scalability.",
+      "client": "TechCorp Industries",
+      "technologies": ["AWS", "Kubernetes", "Docker", "Terraform"],
+      "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop",
+      "link": "https://example.com/project1"
+    },
+    {
+      "id": 2,
+      "title": "AI-Powered Analytics Dashboard",
+      "description": "Built a real-time analytics platform with machine learning predictions, enabling data-driven decisions for a global retail chain.",
+      "client": "RetailGlobal Inc",
+      "technologies": ["Python", "TensorFlow", "React", "Node.js"],
+      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop",
+      "link": "https://example.com/project2"
+    },
+    {
+      "id": 3,
+      "title": "Cybersecurity Framework Implementation",
+      "description": "Implemented comprehensive zero-trust security architecture, protecting sensitive financial data across multiple global offices.",
+      "client": "FinanceSecure Co",
+      "technologies": ["Security", "Network", "Compliance", "Monitoring"],
+      "image": "https://images.unsplash.com/photo-1526374965328-7f5ae4e8b08f?w=600&h=400&fit=crop",
+      "link": "https://example.com/project3"
+    },
+    {
+      "id": 4,
+      "title": "Microservices Architecture Redesign",
+      "description": "Transformed monolithic application into scalable microservices, increasing deployment frequency by 10x and reducing downtime.",
+      "client": "StreamTech Solutions",
+      "technologies": ["Microservices", "gRPC", "Kafka", "PostgreSQL"],
+      "image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop",
+      "link": "https://example.com/project4"
+    },
+    {
+      "id": 5,
+      "title": "IoT Connected Device Network",
+      "description": "Developed IoT platform managing 100k+ connected devices with real-time monitoring and predictive maintenance capabilities.",
+      "client": "ManufacturePro Ltd",
+      "technologies": ["IoT", "MQTT", "Edge Computing", "WebSockets"],
+      "image": "https://images.unsplash.com/photo-1562907550-30f94c531fe2?w=600&h=400&fit=crop",
+      "link": "https://example.com/project5"
+    },
+    {
+      "id": 6,
+      "title": "Blockchain Supply Chain Tracking",
+      "description": "Created immutable supply chain solution tracking product authenticity from manufacturer to end consumer.",
+      "client": "SupplyChain Innovations",
+      "technologies": ["Blockchain", "Solidity", "Web3", "Smart Contracts"],
+      "image": "https://images.unsplash.com/photo-1639762681033-6461377de20d?w=600&h=400&fit=crop",
+      "link": "https://example.com/project6"
+    }
+  ]
+}
