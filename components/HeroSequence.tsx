@@ -107,7 +107,7 @@ export default function HeroSequence() {
     <section className="relative w-full bg-black">
 
       {/* PINNED CONTAINER - 100dvh ensures true full height on mobile/desktop */}
-      <div ref={pinRef} className="sticky top-24 h-[100dvh] w-full flex items-center justify-center overflow-hidden">
+      <div ref={pinRef} className="sticky top-0 h-[100dvh] w-full flex items-center justify-center overflow-hidden">
         
         {/* BACKGROUND CANVAS */}
         {/* object-cover ensures it fills the screen completely without stretching */}

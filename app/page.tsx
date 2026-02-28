@@ -9,8 +9,8 @@ export default function Home() {
   return (
     <>
   
-      <main className="overflow-hidden">
-        <HeroSequence />
+      <main className="">
+        
         <Services />
         <Clients />
         <Portfolio />

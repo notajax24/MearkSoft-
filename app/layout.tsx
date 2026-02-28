@@ -1,27 +1,18 @@
 import type { Metadata, Viewport } from 'next'
-import { JetBrains_Mono } from 'next/font/google'
-import localFont from 'next/font/local'
+import { JetBrains_Mono, Bricolage_Grotesque } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { Header } from '@/components/header'
+import  HeroSequence  from '@/components/HeroSequence'
 import './globals.css'
+import { Scroll } from 'lucide-react'
 
-// 1. Setup Google Font for code/terminal accents
-const jetbrainsMono = JetBrains_Mono({ 
-  subsets: ["latin"], 
-  variable: '--font-jetbrains-mono' 
-});
-
-// 2. Setup Local Font for primary headings/text
-// MAKE SURE: You have your font file located at public/fonts/Career.woff2 (or .ttf)
-const careerFont = localFont({
-  src: '../public/fonts/Career.ttf', // Change extension to .ttf or .otf if needed
-  variable: '--font-career',
-  display: 'swap',
-});
+const bricolage = Bricolage_Grotesque({ subsets: ["latin"], variable: '--font-primary' });
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: '--font-secondary' });
 
 export const metadata: Metadata = {
-  title: 'MearkSoft | Modern IT Solutions', // Updated to match your branding
-  description: 'Cutting-edge IT solutions and enterprise architecture for the digital age.',
+  title: 'NeuralForge | Modern IT Solutions',
+  description: 'Cutting-edge IT solutions for the digital age.',
+  // ... rest of your metadata
 }
 
 export const viewport: Viewport = {
@@ -37,16 +28,17 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    // 3. Inject both font variables into the HTML
-    <html lang="en" className={`dark scroll-smooth ${careerFont.variable} ${jetbrainsMono.variable}`}>
-      
-      {/* 4. Set default font to our new Career font (mapped to font-sans in Tailwind) */}
-      <body className="font-sans antialiased bg-background text-foreground relative min-h-screen overflow-x-hidden selection:bg-cyan-neon selection:text-background">
+    <html lang="en" className={`dark scroll-smooth ${bricolage.variable} ${jetbrainsMono.variable}`}>
+      <body className="font-secondary antialiased bg-background text-foreground relative min-h-screen overflow-x-hidden selection:bg-cyan-neon selection:text-background z-0 ">
         
+        {/* --- DYNAMIC  BACKGROUND --- */}
+         <HeroSequence />
+       
+
         {/* Page Structure */}
         <div className="flex min-h-screen flex-col relative z-10">
+          <main className="flex-1">
           <Header />
-          <main className="flex-1 relative z-10">
             {children}
           </main>
         </div>
