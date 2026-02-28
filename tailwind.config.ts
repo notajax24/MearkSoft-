@@ -9,7 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-jetbrains-mono)', ...defaultTheme.fontFamily.sans],
+        // Set Career as the primary and default sans font
+        primary: ['var(--font-career)', ...defaultTheme.fontFamily.sans],
+        sans: ['var(--font-career)', ...defaultTheme.fontFamily.sans],
+        // Kept JetBrains Mono for your tech/code elements
         mono: ['var(--font-jetbrains-mono)', ...defaultTheme.fontFamily.mono],
       },
       colors: {
