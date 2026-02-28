@@ -91,7 +91,7 @@ export function Services() {
           animate={inView ? 'visible' : 'hidden'}
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {services.map((service, index) => (
+          {services?.map?.((service, index) => (
             <motion.div
               key={index}
               variants={itemVariants}

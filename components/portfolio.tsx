@@ -61,7 +61,7 @@ export function Portfolio() {
           animate={inView ? 'visible' : 'hidden'}
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {portfolioData.projects.map((project) => (
+          {portfolioData?.projects?.map?.((project) => (
             <motion.div
               key={project.id}
               variants={itemVariants}
@@ -83,7 +83,7 @@ export function Portfolio() {
               {/* Content */}
               <div className="p-6">
                 <div className="flex flex-wrap gap-2 mb-3">
-                  {project.technologies.map((tech, idx) => (
+                  {project?.technologies?.map?.((tech, idx) => (
                     <span
                       key={idx}
                       className="text-xs px-2 py-1 bg-cyan-neon/10 border border-cyan-neon/30 text-cyan-neon rounded"

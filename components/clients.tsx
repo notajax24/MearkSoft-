@@ -46,7 +46,7 @@ export function Clients() {
             }}
             className="flex gap-12 whitespace-nowrap"
           >
-            {[...clients, ...clients].map((client, index) => (
+            {clients && [...clients, ...clients]?.map?.((client, index) => (
               <motion.div
                 key={index}
                 className="flex items-center justify-center px-8 py-4 min-w-max"
