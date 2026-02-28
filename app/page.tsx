@@ -1,4 +1,4 @@
-import { Hero } from '@/components/hero'
+import HeroSequence from '@/components/HeroSequence'
 import { Services } from '@/components/services'
 import { Portfolio } from '@/components/portfolio'
 import { Clients } from '@/components/clients'
@@ -8,8 +8,9 @@ import { Footer } from '@/components/footer'
 export default function Home() {
   return (
     <>
+  
       <main className="overflow-hidden">
-        <Hero />
+        <HeroSequence />
         <Services />
         <Clients />
         <Portfolio />

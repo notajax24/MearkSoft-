@@ -1,32 +1,18 @@
 import type { Metadata, Viewport } from 'next'
-import { JetBrains_Mono } from 'next/font/google'
+import { JetBrains_Mono, Bricolage_Grotesque } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { Header } from '@/components/header'
+import  ScrollSequence  from '@/components/ScrollSequence'
 import './globals.css'
+import { Scroll } from 'lucide-react'
 
-const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: '--font-jetbrains-mono' });
+const bricolage = Bricolage_Grotesque({ subsets: ["latin"], variable: '--font-primary' });
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: '--font-secondary' });
 
 export const metadata: Metadata = {
   title: 'NeuralForge | Modern IT Solutions',
-  description: 'Cutting-edge IT solutions for the digital age. Transform your business with advanced technology and innovation.',
-  generator: 'v0.app',
-  icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
-  },
+  description: 'Cutting-edge IT solutions for the digital age.',
+  // ... rest of your metadata
 }
 
 export const viewport: Viewport = {
@@ -42,12 +28,21 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="dark" style={jetbrainsMono.style}>
-      <body className="font-mono antialiased bg-background text-foreground">
-        <Header />
-        <div className="pt-16">
-          {children}
+    <html lang="en" className={`dark scroll-smooth ${bricolage.variable} ${jetbrainsMono.variable}`}>
+      <body className="font-secondary antialiased bg-background text-foreground relative min-h-screen overflow-x-hidden selection:bg-cyan-neon selection:text-background z-0 py-5">
+        
+        {/* --- DYNAMIC  BACKGROUND --- */}
+      
+        {/* <ScrollSequence />  */}
+
+        {/* Page Structure */}
+        <div className="flex min-h-screen flex-col relative z-10">
+          <Header />
+          <main className="flex-1 pt-24">
+            {children}
+          </main>
         </div>
+        
         <Analytics />
       </body>
     </html>

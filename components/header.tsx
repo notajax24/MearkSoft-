@@ -1,10 +1,37 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
+
+  // Smart scroll logic
+  useEffect(() => {
+    const controlNavbar = () => {
+      const currentScrollY = window.scrollY
+
+      if (currentScrollY > lastScrollY && currentScrollY > 80) {
+        // Scrolling down past 80px -> hide header
+        setIsVisible(false)
+        // Close mobile menu if it's open while scrolling down
+        if (isOpen) setIsOpen(false) 
+      } else {
+        // Scrolling up -> show header
+        setIsVisible(true)
+      }
+
+      setLastScrollY(currentScrollY)
+    }
+
+    window.addEventListener('scroll', controlNavbar)
+
+    return () => {
+      window.removeEventListener('scroll', controlNavbar)
+    }
+  }, [lastScrollY, isOpen])
 
   const navItems = [
     { label: 'Services', href: '#services' },
@@ -14,7 +41,11 @@ export function Header() {
   ]
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur border-b border-cyan-neon/20">
+    <header 
+      className={`fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur border-b border-cyan-neon/20 transition-transform duration-300 ease-in-out ${
+        isVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}
+    >
       <div className="container mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <motion.div
@@ -23,7 +54,7 @@ export function Header() {
           transition={{ duration: 0.6 }}
           className="text-xl font-bold text-cyan-neon"
         >
-          {'<'}NeuralForge{' />'}
+        MearkSoft
         </motion.div>
 
         {/* Desktop Navigation */}
