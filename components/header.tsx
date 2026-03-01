@@ -1,125 +1,135 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 
-export function Header() {
+const navItems = [
+  { label: 'Services', href: '#services' },
+  { label: 'Team', href: '#team' },
+  { label: 'Portfolio', href: '#portfolio' },
+  { label: 'Contact', href: '#contact' },
+]
+
+export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
 
-  // Smart scroll logic
+  // Scroll logic: Hide on scroll down, show on scroll up
   useEffect(() => {
     const controlNavbar = () => {
-      const currentScrollY = window.scrollY
-
-      if (currentScrollY > lastScrollY && currentScrollY > 80) {
-        // Scrolling down past 80px -> hide header
-        setIsVisible(false)
-        // Close mobile menu if it's open while scrolling down
-        if (isOpen) setIsOpen(false) 
-      } else {
-        // Scrolling up -> show header
-        setIsVisible(true)
+      if (typeof window !== 'undefined') {
+        if (window.scrollY > lastScrollY && window.scrollY > 100) {
+          setIsVisible(false)
+        } else {
+          setIsVisible(true)
+        }
+        setLastScrollY(window.scrollY)
       }
-
-      setLastScrollY(currentScrollY)
     }
 
     window.addEventListener('scroll', controlNavbar)
-
-    return () => {
-      window.removeEventListener('scroll', controlNavbar)
-    }
-  }, [lastScrollY, isOpen])
-
-  const navItems = [
-    { label: 'Services', href: '#services' },
-    { label: 'Portfolio', href: '#portfolio' },
-    { label: 'About', href: '#about' },
-    { label: 'Contact', href: '#contact' },
-  ]
+    return () => window.removeEventListener('scroll', controlNavbar)
+  }, [lastScrollY])
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur border-b border-cyan-neon/20 transition-transform duration-300 ease-in-out ${
-        isVisible ? 'translate-y-0' : '-translate-y-full'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ease-in-out ${
+        isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
+      } ${lastScrollY > 50 ? 'bg-black/80 backdrop-blur-xl border-b border-white/10' : 'bg-transparent'}`}
     >
       <div className="container mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
-        {/* Logo */}
+        
+        {/* LOGO SECTION */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-xl font-bold text-cyan-neon"
+          className="flex items-center gap-3 group cursor-pointer"
         >
-        MearkSoft
+          
+            
+            <Image 
+              src="/logomain.png" 
+              alt="MearkSoft" 
+              width={100} 
+              height={100} 
+              className="transition-transform duration-500 group-hover:scale-110"
+            />
+          
+          
         </motion.div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex gap-8">
+        {/* DESKTOP NAVIGATION */}
+        <nav className="hidden md:flex gap-8 items-center">
           {navItems.map((item, index) => (
             <motion.a
               key={index}
               href={item.href}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
+              
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="text-foreground/80 hover:text-cyan-neon transition-colors duration-300 text-sm"
+              className="text-[15px] font-mono uppercase tracking-[0.2em] text-white/60 hover:text-cyan-400 transition-colors duration-300"
             >
               {item.label}
             </motion.a>
           ))}
+          
+          <motion.a
+            href="#contact"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-[15px] ml-4 px-6 py-2 bg-white text-black font-mono font-bold uppercase tracking-widest rounded-sm hover:bg-cyan-400 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-cyan-500/40"
+          >
+            Get Started
+          </motion.a>
         </nav>
 
-        {/* CTA Button */}
-        <motion.a
-          href="#contact"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="hidden md:inline-block px-6 py-2 bg-cyan-neon text-background font-bold rounded text-sm hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300"
-        >
-          Get Started
-        </motion.a>
-
-        {/* Mobile menu button */}
+        {/* MOBILE MENU BUTTON */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-cyan-neon text-2xl"
+          className="md:hidden flex flex-col gap-1.5 p-2"
         >
-          {isOpen ? '✕' : '☰'}
+          <div className={`w-6 h-px bg-cyan-400 transition-all ${isOpen ? 'rotate-45 translate-y-2' : ''}`} />
+          <div className={`w-6 h-px bg-cyan-400 transition-all ${isOpen ? 'opacity-0' : ''}`} />
+          <div className={`w-6 h-px bg-cyan-400 transition-all ${isOpen ? '-rotate-45 -translate-y-2' : ''}`} />
         </button>
       </div>
 
-      {/* Mobile Navigation */}
-      {isOpen && (
-        <motion.nav
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          className="md:hidden bg-card border-b border-cyan-neon/20 p-4 space-y-2"
-        >
-          {navItems.map((item, index) => (
-            <a
-              key={index}
-              href={item.href}
-              onClick={() => setIsOpen(false)}
-              className="block py-2 text-foreground/80 hover:text-cyan-neon transition-colors"
-            >
-              {item.label}
-            </a>
-          ))}
-          <a
-            href="#contact"
-            onClick={() => setIsOpen(false)}
-            className="block py-2 px-4 bg-cyan-neon text-background font-bold rounded text-sm mt-2"
+      {/* MOBILE NAVIGATION */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.nav
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="md:hidden bg-black/95 backdrop-blur-2xl border-b border-white/10 overflow-hidden"
           >
-            Get Started
-          </a>
-        </motion.nav>
-      )}
+            <div className="flex flex-col p-6 space-y-4">
+              {navItems.map((item, index) => (
+                <a
+                  key={index}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className="text-sm font-mono text-white/70 hover:text-cyan-400 transition-colors py-2 border-b border-white/5"
+                >
+                  {item.label}
+                </a>
+              ))}
+              <a
+                href="#contact"
+                onClick={() => setIsOpen(false)}
+                className="w-full py-4 bg-cyan-400 text-black text-center font-bold font-mono text-xs uppercase tracking-widest rounded-sm"
+              >
+                Get Started
+              </a>
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   )
 }

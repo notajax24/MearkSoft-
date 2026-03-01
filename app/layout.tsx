@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { JetBrains_Mono, Bricolage_Grotesque } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import { Header } from '@/components/header'
+import  Header  from '@/components/header'
 import  HeroSequence  from '@/components/HeroSequence'
 import './globals.css'
 import { Scroll } from 'lucide-react'

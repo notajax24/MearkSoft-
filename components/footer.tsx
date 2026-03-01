@@ -98,7 +98,7 @@ export function Footer() {
           >
             <h4 className="text-sm font-bold text-violet-400 mb-6 uppercase tracking-widest font-mono">{'// Connect'}</h4>
             <ul className="space-y-3 text-sm text-white/60">
-              {['LinkedIn', 'GitHub', 'Twitter / X', 'Discord'].map((item) => (
+              {['LinkedIn', 'GitHub', 'Twitter / X'].map((item) => (
                 <li key={item}>
                   <a href="#" className="group flex items-center hover:text-cyan-400 transition-colors duration-300">
                     <span className="text-cyan-400/0 group-hover:text-cyan-400 transform -translate-x-2 group-hover:translate-x-0 transition-all duration-300 mr-2">

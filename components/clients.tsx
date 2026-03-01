@@ -2,14 +2,17 @@
 
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { useRef, useState, useEffect } from 'react'
+import Image from 'next/image'
 
+// Ensure these images exist in your public folder
 const clients = [
-  'TFC',
-  'AksharamArts',
-  'RetailGlobal',
-  'StreamTech',
-  'ManufacturePro',
+  { logo: "clients/client1.png", name: "Client 1" },
+  { logo: "clients/client2.png", name: "Client 2" },
+  { logo: "clients/client3.png", name: "Client 3" }, 
+  { logo: "clients/client1.png", name: "Client 4" }, // Added a few more to make the marquee look full
+  { logo: "clients/client2.png", name: "Client 5" },
+  { logo: "clients/client3.png", name: "Client 6" },
+  
 ]
 
 export function Clients() {
@@ -17,96 +20,96 @@ export function Clients() {
     threshold: 0.2,
     triggerOnce: true,
   })
-  const marqueeRef = useRef<HTMLDivElement | null>(null);
-  const [distance, setDistance] = useState(0);
 
-  useEffect(() => {
-    // target full viewport width scrolling
-    setDistance(window.innerWidth);
-    // optionally update on resize
-    const onResize = () => setDistance(window.innerWidth);
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
+  // We duplicate the array so the marquee loops seamlessly
+  const marqueeItems = [...clients, ...clients];
 
   return (
-    // Removed bg-background and added overflow-hidden to contain the new background image
-    <section id='about' ref={ref} className="relative py-16 md:py-24 border-y border-cyan-neon/20 overflow-hidden">
+    <section id='clients' ref={ref} className="relative py-24 md:py-32 border-y border-white/10 overflow-hidden bg-black z-10">
       
-      {/* BACKGROUND IMAGE LAYER */}
+      {/* BACKGROUND TEXTURE */}
       <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-60 mix-blend-screen"
-        style={{ backgroundImage: "url('/bg2.jfif')" }}
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-20 mix-blend-screen grayscale pointer-events-none"
+        style={{ backgroundImage: "url('/bg2.gif')" }} // Make sure extension is correct
       />
       
-      {/* GRADIENT OVERLAYS */}
-      {/* Top and bottom black fade to seamlessly merge with the rest of the dark site */}
-      <div className="absolute inset-0 z-0 bg-linear-to-b from-black via-transparent to-black opacity-90" />
-      {/* Dark overlay to ensure the bright center of the image doesn't wash out the text */}
+      {/* GRADIENT OVERLAYS (Fixed syntax) */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-black via-transparent to-black" />
       <div className="absolute inset-0 z-0 bg-black/60" />
 
       <div className="relative z-10 container mx-auto px-4 md:px-6">
-        {/* Section header */}
+        
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="mb-12 text-center"
+          className="mb-16 text-center"
         >
-          <p className="text-cyan-neon text-sm font-mono mb-2">{'// trusted by industry leaders'}</p>
-          {/* Added a drop shadow to the heading for better contrast against the glow */}
-          <h2 className="heading-md text-violet-glow drop-shadow-lg">Our Clients</h2>
+          <p className="text-cyan-400 text-[10px] font-mono mb-4 uppercase tracking-[0.5em]">
+            {'// Network Established'}
+          </p>
+          <h2 className="text-4xl md:text-6xl font-primary font-bold text-white mb-6 tracking-tighter drop-shadow-lg">
+            TRUSTED <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-violet-500">PARTNERS</span>
+          </h2>
+          <div className="w-12 h-[1px] bg-cyan-400/50 mx-auto" />
         </motion.div>
 
-        {/* Animated marquee */}
-       <div className="overflow-hidden py-8 relative [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          
+        {/* CSS/Framer Motion Seamless Marquee */}
+        <div className="overflow-hidden py-8 relative [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
           <motion.div
-            initial={{ x: 0 }}
-            animate={{ x: -2000 }}
+            animate={{ x: ["0%", "-50%"] }} // Perfectly scrolls exactly half its width, then seamlessly resets
             transition={{
-              duration: 30,
+              duration: 25, // Adjust speed here
               repeat: Infinity,
               ease: 'linear',
             }}
-            className="flex gap-12 whitespace-nowrap"
+            className="flex w-fit gap-16 md:gap-24 items-center pr-16 md:pr-24"
           >
-            {[...clients, ...clients].map((client, index) => (
-              <motion.div
+            {marqueeItems.map((client, index) => (
+              <div
                 key={index}
-                className="flex items-center justify-center px-8 py-4 min-w-max"
-                whileHover={{ scale: 1.1 }}
+                className="relative flex items-center justify-center min-w-[120px] md:min-w-[150px] group cursor-pointer"
               >
-                <div className="text-xl font-bold text-white/60 hover:text-cyan-neon transition-colors duration-300 drop-shadow-md">
-                  {'< '}{client}{' />'}
+                {/* Replaced standard img with Next/Image and added hover glow */}
+                <div className="relative w-full h-16 grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 hover:scale-110 drop-shadow-[0_0_15px_rgba(0,255,255,0)] group-hover:drop-shadow-[0_0_15px_rgba(0,255,255,0.4)]">
+                   <img 
+                      src={client.logo} 
+                      alt={client.name} 
+                      className="w-full h-full object-contain"
+                   />
                 </div>
-              </motion.div>
+              </div>
             ))}
           </motion.div>
         </div>
 
-        {/* Stats */}
+        {/* Stats Section */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="grid grid-cols-3 gap-4 md:gap-8 mt-12 text-center"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-24 text-center max-w-5xl mx-auto"
         >
-          {/* Upgraded cards to use a glassmorphism effect */}
-          <div className="p-6 border border-cyan-neon/30 rounded-xl bg-black/40 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.5)] transition-transform hover:-translate-y-1 duration-300">
-            <div className="text-3xl md:text-5xl font-bold text-cyan-neon drop-shadow-[0_0_10px_rgba(0,255,255,0.5)]">10+</div>
-            <p className="text-sm md:text-base text-white/80 mt-2 font-mono">Projects Delivered</p>
+          {/* Stat Card 1 */}
+          <div className="p-8 border border-white/10 rounded-xl bg-white/5 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.5)] transition-all hover:-translate-y-2 hover:border-cyan-400/50 duration-500 group">
+            <div className="text-4xl md:text-6xl font-primary font-bold text-white group-hover:text-cyan-400 transition-colors">10+</div>
+            <p className="text-xs text-white/50 mt-4 font-mono uppercase tracking-[0.2em]">Projects Delivered</p>
           </div>
-          <div className="p-6 border border-violet-glow/30 rounded-xl bg-black/40 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.5)] transition-transform hover:-translate-y-1 duration-300">
-            <div className="text-3xl md:text-5xl font-bold text-violet-glow drop-shadow-[0_0_10px_rgba(139,92,246,0.5)]">4+</div>
-            <p className="text-sm md:text-base text-white/80 mt-2 font-mono">Years Experience</p>
+          
+          {/* Stat Card 2 */}
+          <div className="p-8 border border-white/10 rounded-xl bg-white/5 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.5)] transition-all hover:-translate-y-2 hover:border-violet-500/50 duration-500 group">
+            <div className="text-4xl md:text-6xl font-primary font-bold text-white group-hover:text-violet-400 transition-colors">4+</div>
+            <p className="text-xs text-white/50 mt-4 font-mono uppercase tracking-[0.2em]">Years Experience</p>
           </div>
-          <div className="p-6 border border-cyan-neon/30 rounded-xl bg-black/40 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.5)] transition-transform hover:-translate-y-1 duration-300">
-            {/* Swapped magenta-pulse for cyan-neon to keep the color palette cohesive, but you can change it back if you prefer! */}
-            <div className="text-3xl md:text-5xl font-bold text-cyan-neon drop-shadow-[0_0_10px_rgba(0,255,255,0.5)]">24/7</div>
-            <p className="text-sm md:text-base text-white/80 mt-2 font-mono">Support</p>
+          
+          {/* Stat Card 3 */}
+          <div className="p-8 border border-white/10 rounded-xl bg-white/5 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.5)] transition-all hover:-translate-y-2 hover:border-cyan-400/50 duration-500 group">
+            <div className="text-4xl md:text-6xl font-primary font-bold text-white group-hover:text-cyan-400 transition-colors">24/7</div>
+            <p className="text-xs text-white/50 mt-4 font-mono uppercase tracking-[0.2em]">System Support</p>
           </div>
         </motion.div>
+        
       </div>
     </section>
   )
