@@ -10,7 +10,7 @@ const bricolage = Bricolage_Grotesque({ subsets: ["latin"], variable: '--font-pr
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: '--font-secondary' });
 
 export const metadata: Metadata = {
-  title: 'NeuralForge | Modern IT Solutions',
+  title: 'MearkSoft | Modern IT Solutions',
   description: 'Cutting-edge IT solutions for the digital age.',
   // ... rest of your metadata
 }
