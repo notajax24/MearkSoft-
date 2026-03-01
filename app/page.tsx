@@ -4,6 +4,7 @@ import { Portfolio } from '@/components/portfolio'
 import { Clients } from '@/components/clients'
 import { Contact } from '@/components/contact'
 import { Footer } from '@/components/footer'
+import { Team } from '@/components/team'
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
         <Services />
         <Clients />
         <Portfolio />
+        <Team />
         <Contact />
       </main>
       <Footer />

@@ -5,19 +5,16 @@ import { useInView } from 'react-intersection-observer'
 import { useRef, useState, useEffect } from 'react'
 
 const clients = [
-  'TechCorp',
-  'FinanceSecure',
+  'TFC',
+  'AksharamArts',
   'RetailGlobal',
   'StreamTech',
   'ManufacturePro',
-  'SupplyChain',
-  'CloudNine',
-  'DataVault',
 ]
 
 export function Clients() {
   const { ref, inView } = useInView({
-    threshold: 0.1,
+    threshold: 0.2,
     triggerOnce: true,
   })
   const marqueeRef = useRef<HTMLDivElement | null>(null);
@@ -34,7 +31,7 @@ export function Clients() {
 
   return (
     // Removed bg-background and added overflow-hidden to contain the new background image
-    <section ref={ref} className="relative py-16 md:py-24 border-y border-cyan-neon/20 overflow-hidden">
+    <section id='about' ref={ref} className="relative py-16 md:py-24 border-y border-cyan-neon/20 overflow-hidden">
       
       {/* BACKGROUND IMAGE LAYER */}
       <div 

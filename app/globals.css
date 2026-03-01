@@ -10,15 +10,15 @@
   :root {
     /* Sci-Fi Dark Mode - Pantone Inspired (Your Original Colors) */
     --background: #000000;
-    --foreground: rgb(136, 136, 136);
-    --primary: #00ffff;
+    --foreground: rgb(168, 168, 168);
+    --primary: #000000;
     --secondary: #8b5cf6;
     --accent: #ff006e;
     --muted: #1e293b;
     --border: #5a5a5a;
     --card: #0f1626;
     --cyan-neon: #00ffff;
-    --violet-glow: #8b5cf6;
+    --violet-glow: #6f43d8;
     --magenta-pulse: #ff006e;
   }
 

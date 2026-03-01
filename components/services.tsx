@@ -119,7 +119,7 @@ export function Services() {
               <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent z-20" />
               
               {/* Icon Container */}
-              <div className="text-cyan-neon mb-6 p-4 bg-black/40 border border-cyan-400/20 inline-flex rounded-xl group-hover:bg-cyan-neon group-hover:text-black transition-all duration-300 shadow-sm group-hover:shadow-[0_0_20px_#00ffff80]">
+              <div className="text-cyan-neon mb-6 p-4 bg-black/40 border border-cyan-400/20 inline-flex rounded-xl group-hover:bg-cyan-neon group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-[0_0_20px_#00ffff80]">
                 {service.icon}
               </div>
               

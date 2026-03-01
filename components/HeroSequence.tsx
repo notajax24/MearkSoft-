@@ -1,35 +1,67 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function HeroSequence() {
-  // Refs for GSAP
   const pinRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  
-  // Refs for text elements to animate
-  const textContainerRef = useRef<HTMLDivElement | null>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement | null>(null);
+  
+  // Refs for shattering/sliding animation
+  const leftContentRef = useRef<HTMLDivElement | null>(null);
+  const rightContentRef = useRef<HTMLDivElement | null>(null);
+  const badgeRef = useRef<HTMLDivElement | null>(null);
+
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext("2d");
     if (!canvas || !context) return;
     
-    const frameCount = 240;
-    // Set these to match the exact resolution of your ezgif frames
+    const frameCount = 150;
+    // High-res internal dimensions
     canvas.width = 1920;
     canvas.height = 1080;
 
     const currentFrame = (index: number) =>
-      `/sequence/ezgif-frame-${(index + 1).toString().padStart(3, "0")}.jpg`;
+      `/sequence2/ezgif-frame-${(index + 1).toString().padStart(3, "0")}.png`;
 
     const images: HTMLImageElement[] = [];
     const frames = { current: 0 };
+
+    // --- HELPER: OBJECT-COVER FOR CANVAS ---
+    const renderCanvas = (img: HTMLImageElement) => {
+      if (!canvas || !context) return;
+
+      const canvasAspect = canvas.clientWidth / canvas.clientHeight;
+      const imageAspect = img.width / img.height;
+
+      let drawWidth = img.width;
+      let drawHeight = img.height;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      if (canvasAspect > imageAspect) {
+        drawHeight = img.width / canvasAspect;
+        offsetY = (img.height - drawHeight) / 2;
+      } else {
+        drawWidth = img.height * canvasAspect;
+        offsetX = (img.width - drawWidth) / 2;
+      }
+
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(
+        img, 
+        offsetX, offsetY, drawWidth, drawHeight, // Source
+        0, 0, canvas.width, canvas.height        // Destination
+      );
+    };
 
     // Preload images
     for (let i = 0; i < frameCount; i++) {
@@ -39,63 +71,67 @@ export default function HeroSequence() {
     }
 
     images[0].onload = () => {
-      context.drawImage(images[0], 0, 0);
+      renderCanvas(images[0]);
+      setIsLoaded(true); 
     };
 
-    // --- SETUP INITIAL STATES ---
-    // Hide the text children initially with a futuristic blur and left offset
-    if (textContainerRef.current) {
-      gsap.set(textContainerRef.current.children, { 
-        opacity: 0, 
-        x: -40, 
-        filter: "blur(10px)" 
-      });
-    }
-
-    // --- GSAP TIMELINE ---
+    // --- GSAP SCROLL TIMELINE ---
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: pinRef.current,
         start: "top top",
-        end: "+=4000", // Adjust this to make the scroll faster/slower
-        scrub: 0.5, // 0.5 gives it a smooth, slightly delayed feeling
+        end: "+=4000",
+        scrub: 0.5,
         pin: true,
+        invalidateOnRefresh: true,
       },
     });
 
-    // 1. Animate the canvas sequence for the full duration
+    // 1. Image Sequence Animation
     tl.to(frames, {
       current: frameCount - 1,
       snap: "current",
       duration: frameCount,
       ease: "none",
       onUpdate: () => {
-        if (images[frames.current] && canvas && context) {
-          context.clearRect(0, 0, canvas.width, canvas.height);
-          context.drawImage(images[frames.current], 0, 0);
+        const img = images[frames.current];
+        if (img && img.complete) {
+          renderCanvas(img);
         }
       },
     }, 0);
 
-    // 2. Fade out the "Scroll" indicator immediately as user starts scrolling
-    tl.to(scrollIndicatorRef.current, {
-      opacity: 0,
-      y: 20,
-      duration: 20, // Fades out in the first 20 frames of scroll
-      ease: "power2.out",
-    }, 0);
+    // 2. Hide Scroll Indicator early
+    tl.to(scrollIndicatorRef.current, { opacity: 0, y: 20, duration: 10 }, 0);
 
-    // 3. Futuristic Text Reveal on the Left
-    // Assuming the statue moves right around frame 70, we bring the text in here.
-    // Adjust the '70' below if your video timing is different.
-    tl.to(textContainerRef.current!.children, {
-      opacity: 1,
-      x: 0,
-      filter: "blur(0px)",
-      duration: 50, // How long it takes to animate in
-      stagger: 15, // Creates a staggered "booting up" sequence between elements
-      ease: "power3.out",
-    }, 70); 
+    // 3. THE EXIT ANIMATION (Starts at frame 110)
+    // Scrub: 0.5 ensures these slide back in when scrolling up
+    const exitStart = 110;
+
+    tl.to(badgeRef.current, {
+        opacity: 0,
+        y: -50,
+        filter: "blur(15px)",
+        duration: 20
+    }, exitStart);
+
+    tl.to(leftContentRef.current, {
+      x: "-120vw", // Slide left
+      opacity: 0,
+      filter: "blur(20px)",
+      skewX: -15, 
+      duration: 40,
+      ease: "power2.in"
+    }, exitStart);
+
+    tl.to(rightContentRef.current, {
+      x: "120vw", // Slide right
+      opacity: 0,
+      filter: "blur(20px)",
+      skewX: 15,
+      duration: 40,
+      ease: "power2.in"
+    }, exitStart + 2);
 
     return () => {
       tl.kill();
@@ -105,70 +141,98 @@ export default function HeroSequence() {
 
   return (
     <section className="relative w-full bg-black">
-
-      {/* PINNED CONTAINER - 100dvh ensures true full height on mobile/desktop */}
+      {/* Container forced to full dynamic viewport height */}
       <div ref={pinRef} className="sticky top-0 h-[100dvh] w-full flex items-center justify-center overflow-hidden">
         
-        {/* BACKGROUND CANVAS */}
-        {/* object-cover ensures it fills the screen completely without stretching */}
+        {/* CANVAS: Fits height and width perfectly */}
         <canvas
           ref={canvasRef}
           className="absolute inset-0 w-full h-full object-cover z-0 opacity-90"
         />
 
-        {/* LEFT-ALIGNED HERO TEXT */}
-        {/* We use an absolute container covering the screen to position the text left */}
-        <div className="absolute inset-0 z-10 flex items-center px-6 md:px-16 lg:px-24 pointer-events-none">
-          <div 
-            ref={textContainerRef} 
-            className="flex flex-col items-start text-left max-w-2xl pointer-events-auto"
+        {/* CENTERED CONTENT OVERLAY */}
+        <div className="relative z-10 flex flex-col items-center text-center px-4 w-full max-w-7xl pointer-events-none">
+          
+          {/* Top Protocol Badge */}
+          <motion.div
+            ref={badgeRef}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={isLoaded ? { opacity: 1, scale: 1 } : {}}
+            className="mb-10 inline-flex items-center gap-3 px-6 py-2 bg-black/40 backdrop-blur-xl border border-cyan-500/20 rounded-full text-[10px] text-cyan-400 font-mono uppercase tracking-[0.4em] shadow-[0_0_15px_rgba(6,182,212,0.1)]"
           >
-            
-            {/* 1. Animated Status Badge */}
-            <div className="mb-6 inline-flex items-center gap-3 px-5 py-2 bg-black/40 backdrop-blur-md border border-cyan-400/30 rounded-full text-xs text-cyan-400 font-mono uppercase tracking-widest shadow-[0_0_15px_rgba(0,255,255,0.15)]">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#00ffff]" />
-              Welcome to MearkSoft // System Initialized
-            </div>
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+            MearkSoft // System Initialized
+          </motion.div>
 
-            {/* 2. Main heading */}
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white drop-shadow-2xl leading-[1.1]">
-              TRANSFORMING IDEAS <br/> INTO <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-violet-500">REALITY</span>
-            </h1>
+          <div className="flex flex-col items-center pointer-events-auto">
+            <div className="overflow-visible">
+                {/* Heading 01 - Career Font */}
+                <motion.div 
+                    ref={leftContentRef}
+                    initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+                    animate={isLoaded ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+                    transition={{ duration: 1, delay: 0.5, ease: "circOut" }}
+                >
+                    <h1 className="text-6xl md:text-[9.5rem] font-primary font-bold text-white leading-[0.85] tracking-tighter">
+                        TRANSFORMING
+                    </h1>
+                </motion.div>
 
-            {/* 3. Subheading / Terminal Output */}
-            <div className="mb-10 max-w-xl">
-              <p className="text-lg text-white/70 font-mono leading-relaxed relative inline-block drop-shadow-md">
-                <span className="text-violet-500 mr-2">{'>'}</span>
-                Building sleek, scalable web experiences that put users first. Effortless solutions for modern problems.
-                <span className="inline-block w-2.5 h-5 bg-cyan-400 ml-2 align-middle animate-pulse" />
-              </p>
-            </div>
+                {/* Heading 02 - Career Font */}
+                <motion.div 
+                    ref={rightContentRef}
+                    initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+                    animate={isLoaded ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+                    transition={{ duration: 1, delay: 0.7, ease: "circOut" }}
+                >
+                    <h1 className="text-6xl md:text-[9.5rem] font-primary font-bold mb-10 bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-cyan-500/50 leading-[0.9]">
+                        THE FUTURE
+                    </h1>
+                    
+                    <p className="max-w-2xl mx-auto text-white/50 font-mono text-sm md:text-lg mb-14 tracking-widest uppercase">
+                        <span className="text-cyan-400">_</span>Sleek architecture for modern digital problems
+                    </p>
 
-            {/* 4. CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <button className="px-8 py-3 bg-cyan-500/10 backdrop-blur-md border border-cyan-400/50 text-cyan-50 rounded-lg hover:bg-cyan-500/20 hover:border-cyan-400 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all duration-300 uppercase tracking-wider text-sm font-bold">
-                Get Started
-              </button>
-              <button className="px-8 py-3 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-lg hover:bg-violet-500/20 hover:border-violet-500/50 hover:text-violet-300 hover:shadow-[0_0_20px_rgba(139,92,246,0.3)] transition-all duration-300 uppercase tracking-wider text-sm font-bold">
-                Learn More
-              </button>
+                    <div className="flex flex-col sm:flex-row gap-8 justify-center">
+                        <button className="group relative px-14 py-5 bg-cyan-500/5 backdrop-blur-md border border-cyan-400/30 text-cyan-400 rounded-sm overflow-hidden transition-all hover:bg-cyan-500/20 font-mono text-xs uppercase tracking-[0.3em]">
+                            <span className="relative z-10">[ Initialize ]</span>
+                            <div className="absolute inset-0 bg-cyan-400/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                        </button>
+                        <button className="px-14 py-5 bg-white/5 backdrop-blur-md border border-white/10 text-white/70 rounded-sm hover:bg-white/10 transition-all font-mono text-xs uppercase tracking-[0.3em]">
+                            Learn_More
+                        </button>
+                    </div>
+                </motion.div>
             </div>
-            
           </div>
         </div>
 
-        {/* BOTTOM SCROLL INDICATOR */}
-        <div 
-          ref={scrollIndicatorRef}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-3 z-10"
-        >
-          <span className="text-[10px] text-cyan-400/70 font-mono uppercase tracking-[0.3em]">Initialize sequence</span>
-          <div className="w-px h-16 bg-white/10 overflow-hidden relative">
-            <div className="absolute left-0 w-full h-1/2 bg-gradient-to-b from-transparent via-cyan-400 to-transparent animate-[scrolldown_2s_ease-in-out_infinite]" />
+        {/* INDICATOR */}
+        <div ref={scrollIndicatorRef} className="absolute bottom-12 flex flex-col items-center gap-5 opacity-0 animate-fade-in">
+          <div className="w-[1px] h-24 bg-gradient-to-b from-cyan-500/50 to-transparent relative overflow-hidden">
+             <div className="absolute top-0 left-0 w-full h-full bg-cyan-400 animate-scroll-line" />
           </div>
+          <span className="text-[9px] text-cyan-400/40 font-mono uppercase tracking-[0.6em] rotate-90 origin-left translate-x-1">Scroll</span>
         </div>
 
       </div>
+
+      <style jsx>{`
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fade-in {
+            animation: fade-in 1s forwards 1.5s;
+        }
+        @keyframes scroll-line {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        .animate-scroll-line {
+            animation: scroll-line 2.5s cubic-bezier(0.76, 0, 0.24, 1) infinite;
+        }
+      `}</style>
     </section>
   );
 }

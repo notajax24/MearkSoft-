@@ -1,20 +1,20 @@
 'use client'
 
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { useState, useRef } from 'react'
+import { supabase } from '@/lib/supabase'
 
 export function Contact() {
   const sectionRef = useRef(null)
 
-  // Setup Scroll Parallax for the background orb
+  // Scroll Parallax for the background decorative elements
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"]
   })
   
-  // Orb moves up slightly as user scrolls down
-  const orbY = useTransform(scrollYProgress, [0, 1], ["20%", "-20%"])
-  const orbOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.1, 0.4, 0.1])
+  const orbY = useTransform(scrollYProgress, [0, 1], ["10%", "-10%"])
+  const orbOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.1, 0.3, 0.1])
 
   const [formData, setFormData] = useState({
     name: '',
@@ -24,7 +24,7 @@ export function Contact() {
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -34,157 +34,171 @@ export function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setStatus('idle')
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    setIsSubmitting(false)
-    setSubmitted(true)
-    
-    setTimeout(() => {
+    try {
+      // Data insertion into Supabase
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert([
+          { 
+            name: formData.name, 
+            email: formData.email, 
+            company: formData.company, 
+            message: formData.message 
+          },
+        ])
+
+      if (error) throw error
+
+      setStatus('success')
       setFormData({ name: '', email: '', company: '', message: '' })
-      setSubmitted(false)
-    }, 3000)
+      
+      // Reset success message after 5 seconds
+      setTimeout(() => setStatus('idle'), 5000)
+
+    } catch (err) {
+      console.error('Supabase Error:', err)
+      setStatus('error')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
-    // Added overflow-hidden to contain the background layers
-    <section id="contact" ref={sectionRef} className="relative py-20 md:py-32 z-10 overflow-hidden">
+    <section id="contact" ref={sectionRef} className="relative py-24 md:py-40 z-10 overflow-hidden bg-black">
       
-      {/* BACKGROUND IMAGE LAYER */}
-      {/* I've used bg2.jfif here as the dark, dramatic center looks great behind a form, but you can swap it */}
+      {/* BACKGROUND TEXTURE */}
       <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-50 mix-blend-screen"
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-20 grayscale pointer-events-none"
         style={{ backgroundImage: "url('/bg2.jfif')" }} 
       />
       
-      {/* GRADIENT OVERLAYS */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-b from-black via-transparent to-black opacity-90" />
-      <div className="absolute inset-0 z-0 bg-black/60" />
+      {/* GRADIENT MASK */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-black via-transparent to-black" />
 
-      {/* PARALLAX GLOWING ORB */}
+      {/* PARALLAX DECORATIVE ORB */}
       <motion.div 
         style={{ y: orbY, opacity: orbOpacity }}
-        className="absolute bottom-1/4 left-0 w-[500px] h-[500px] bg-magenta-500/20 rounded-full filter blur-[120px] pointer-events-none z-0" 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full filter blur-[120px] pointer-events-none z-0" 
       />
 
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         
-        {/* Scroll-triggered Section Header */}
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
           className="mb-16 text-center"
         >
-          <p className="text-cyan-neon text-sm font-mono mb-2 uppercase tracking-widest">
-            {'// get in touch'}
+          <p className="text-cyan-400 text-[10px] font-mono mb-4 uppercase tracking-[0.5em]">
+            {'// Initializing Communication'}
           </p>
-          <h2 className="text-4xl md:text-5xl font-primary text-white mb-4 drop-shadow-lg">
-            LET'S BUILD <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-violet-500">TOGETHER</span>
+          <h2 className="text-5xl md:text-7xl font-primary font-bold text-white mb-6">
+            LET&apos;S <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-violet-500">CONNECT</span>
           </h2>
-          <p className="mt-4 text-white/70 font-mono text-sm max-w-2xl mx-auto drop-shadow-md">
-            Ready to transform your business? Contact us to discuss your project and infrastructure needs.
-          </p>
+          <div className="w-16 h-[1px] bg-cyan-400/50 mx-auto" />
         </motion.div>
 
-        <div className="max-w-2xl mx-auto">
-          {/* Glassmorphic Form Container */}
+        <div className="max-w-3xl mx-auto">
           <motion.form
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
             onSubmit={handleSubmit}
-            className="space-y-6 p-8 md:p-10 border border-white/10 rounded-2xl bg-black/40 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
+            className="space-y-8 p-8 md:p-12 border border-white/10 rounded-xl bg-white/[0.02] backdrop-blur-3xl shadow-2xl"
           >
-            {/* Success message */}
-            {submitted && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="p-4 border border-cyan-400/50 bg-cyan-400/10 text-cyan-400 rounded-lg text-center font-mono text-sm backdrop-blur-md"
-              >
-                {'✓ Message initialized and sent successfully. We\'ll be in touch.'}
-              </motion.div>
-            )}
+            {/* Success/Error Feedback */}
+            <AnimatePresence>
+              {status === 'success' && (
+                <motion.div 
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="p-4 border border-cyan-400/30 bg-cyan-400/5 text-cyan-400 rounded font-mono text-xs text-center"
+                >
+                  {'[ SUCCESS ]: DATA TRANSMITTED TO SECURE STORAGE.'}
+                </motion.div>
+              )}
+              {status === 'error' && (
+                <motion.div 
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  className="p-4 border border-red-500/30 bg-red-500/5 text-red-500 rounded font-mono text-xs text-center"
+                >
+                  {'[ ERROR ]: TRANSMISSION INTERRUPTED. CHECK CONNECTION.'}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-xs font-mono text-cyan-400 mb-2 uppercase tracking-wider">
-                  {'> Name'}
-                </label>
-                {/* Upgraded Inputs: Glassy look with strong focus states */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-2">
+                <label className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Full Name</label>
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3 bg-white/5 border border-white/10 text-white rounded-lg focus:border-cyan-400 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-cyan-400/50 transition-all placeholder:text-white/30"
-                  placeholder="Your name"
+                  className="w-full px-0 py-3 bg-transparent border-b border-white/10 text-white focus:border-cyan-400 focus:outline-none transition-all font-mono placeholder:text-white/10"
+                  placeholder="AJAY JACHAK"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-mono text-cyan-400 mb-2 uppercase tracking-wider">
-                  {'> Email'}
-                </label>
+              <div className="space-y-2">
+                <label className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Email Address</label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3 bg-white/5 border border-white/10 text-white rounded-lg focus:border-cyan-400 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-cyan-400/50 transition-all placeholder:text-white/30"
-                  placeholder="your.email@example.com"
+                  className="w-full px-0 py-3 bg-transparent border-b border-white/10 text-white focus:border-cyan-400 focus:outline-none transition-all font-mono placeholder:text-white/10"
+                  placeholder="USER@MEARKSOFT.COM"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-mono text-cyan-400 mb-2 uppercase tracking-wider">
-                {'> Company (Optional)'}
-              </label>
+            <div className="space-y-2">
+              <label className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Company / Organization</label>
               <input
                 type="text"
                 name="company"
                 value={formData.company}
                 onChange={handleChange}
-                className="w-full px-5 py-3 bg-white/5 border border-white/10 text-white rounded-lg focus:border-cyan-400 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-cyan-400/50 transition-all placeholder:text-white/30"
-                placeholder="Your organization"
+                className="w-full px-0 py-3 bg-transparent border-b border-white/10 text-white focus:border-cyan-400 focus:outline-none transition-all font-mono placeholder:text-white/10"
+                placeholder="OPTIONAL"
               />
             </div>
 
-            <div>
-              <label className="block text-xs font-mono text-cyan-400 mb-2 uppercase tracking-wider">
-                {'> Message'}
-              </label>
+            <div className="space-y-2">
+              <label className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Project Parameters</label>
               <textarea
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
                 required
-                rows={5}
-                className="w-full px-5 py-3 bg-white/5 border border-white/10 text-white rounded-lg focus:border-cyan-400 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-cyan-400/50 transition-all placeholder:text-white/30 resize-none"
-                placeholder="Define your project parameters..."
+                rows={4}
+                className="w-full px-0 py-3 bg-transparent border-b border-white/10 text-white focus:border-cyan-400 focus:outline-none transition-all font-mono placeholder:text-white/10 resize-none"
+                placeholder="DESCRIBE YOUR VISION..."
               />
             </div>
 
-            <motion.button
-              type="submit"
-              disabled={isSubmitting}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full py-4 mt-2 bg-cyan-500/20 backdrop-blur-md border border-cyan-400/50 text-cyan-50 font-bold rounded-lg hover:bg-cyan-500/30 hover:border-cyan-400 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-widest text-sm"
-            >
-              {isSubmitting ? 'Transmitting...' : 'Initialize Contact'}
-            </motion.button>
+            <div className="pt-6">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="group relative w-full py-5 bg-white text-black font-bold uppercase tracking-[0.3em] text-xs hover:bg-cyan-400 transition-colors disabled:opacity-50"
+              >
+                {isSubmitting ? 'Transmitting...' : 'Send Message'}
+              </button>
+            </div>
 
-            <p className="text-xs text-white/40 text-center font-mono mt-4">
-              {'// Secure transmission channel. ETA for response: < 24 hrs'}
+            <p className="text-[9px] text-white/20 text-center font-mono">
+              BY SENDING, YOU AGREE TO OUR ENCRYPTED DATA HANDLING PROTOCOLS.
             </p>
           </motion.form>
         </div>

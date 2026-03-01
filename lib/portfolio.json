@@ -4,27 +4,25 @@
       "id": 1,
       "title": "TFC Fitness Portfolio",
       "description": "Developed a scalable cloud-based fitness tracking application with real-time data synchronization, personalized workout plans, and social sharing features.",
-      "technologies": ["AWS", "Kubernetes", "Docker", "Terraform"],
-      "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop",
+      "technologies": ["NEXT Js", "TailwindCSS", "ReactJS"],
+      "image": "https://dmecjrluemcaiwqxcigw.supabase.co/storage/v1/object/sign/IMG/tfcportfolio.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wOGVmNjdjMy05ZjQ3LTQxZjAtYjRjNy1kZmVhOWY0MGQ1MWMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJTUcvdGZjcG9ydGZvbGlvLnBuZyIsImlhdCI6MTc3MjM1MjQxMCwiZXhwIjoxODAzODg4NDEwfQ.fuOW5hyMB7puXSO4bbKQT3wrzBQF1wXM4C9ryNtvvvQ",
       "link": "https://tfcnashik.com"
     },
     {
       "id": 2,
-      "title": "AI-Powered Analytics Dashboard",
-      "description": "Built a real-time analytics platform with machine learning predictions, enabling data-driven decisions for a global retail chain.",
-      "client": "RetailGlobal Inc",
+      "title": "Aksharam Arts Portfolio",
+      "description": "Designed and implemented a visually stunning portfolio website for an artist, showcasing their work with interactive galleries, smooth animations, and responsive design.",
       "technologies": ["Python", "TensorFlow", "React", "Node.js"],
-      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop",
-      "link": "https://example.com/project2"
+      "image": "https://dmecjrluemcaiwqxcigw.supabase.co/storage/v1/object/sign/IMG/aksharam.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wOGVmNjdjMy05ZjQ3LTQxZjAtYjRjNy1kZmVhOWY0MGQ1MWMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJTUcvYWtzaGFyYW0ucG5nIiwiaWF0IjoxNzcyMzUyNTA2LCJleHAiOjE4MDM4ODg1MDZ9.SfauZW5yNdnfDO8f2cv9vfyh_A-Q1hxM4m_-3qlwFiU",
+      "link": "https://aksharam.vercel.app/"
     },
     {
       "id": 3,
-      "title": "Cybersecurity Framework Implementation",
-      "description": "Implemented comprehensive zero-trust security architecture, protecting sensitive financial data across multiple global offices.",
-      "client": "FinanceSecure Co",
+      "title": "SaveMyReels Instagram App",
+      "description": "Created a user-friendly Instagram reel downloader app with a clean interface, allowing users to easily save and organize their favorite reels for offline viewing.",
       "technologies": ["Security", "Network", "Compliance", "Monitoring"],
-      "image": "https://images.unsplash.com/photo-1526374965328-7f5ae4e8b08f?w=600&h=400&fit=crop",
-      "link": "https://example.com/project3"
+      "image": "https://dmecjrluemcaiwqxcigw.supabase.co/storage/v1/object/sign/IMG/savemyreels.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wOGVmNjdjMy05ZjQ3LTQxZjAtYjRjNy1kZmVhOWY0MGQ1MWMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJJTUcvc2F2ZW15cmVlbHMucG5nIiwiaWF0IjoxNzcyMzUyODcwLCJleHAiOjE4MDM4ODg4NzB9.3zJ7zezxnNns893S8RAaHAVwwD9345XplKredjZ-RJA",
+      "link": "https://savemyreels.vercel.app/"
     }
    
   ]
