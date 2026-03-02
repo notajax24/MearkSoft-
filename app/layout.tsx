@@ -29,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`dark scroll-smooth ${bricolage.variable} ${jetbrainsMono.variable}`}>
-      <body className="font-secondary antialiased bg-background text-foreground relative min-h-screen overflow-x-hidden selection:bg-cyan-neon selection:text-background z-0 ">
+      <body className="font-secondary antialiased bg-background text-foreground relative min-h-screen overflow-x-hidden selection:bg-black selection:text-background z-0 ">
         
         {/* --- DYNAMIC  BACKGROUND --- */}
          <HeroSequence />
