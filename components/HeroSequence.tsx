@@ -24,7 +24,7 @@ export default function HeroSequence() {
     if (!canvas || !context) return;
     
     // We only want the last 100 frames (frames 51 to 150)
-    const frameCount = 100;
+    const frameCount = 70;
     const frameOffset = 50; 
     
     // High-res internal dimensions (Native 16:9 ratio)
@@ -88,7 +88,7 @@ export default function HeroSequence() {
     tl.to(scrollIndicatorRef.current, { opacity: 0, y: 20, duration: 10 }, 0);
 
     // 3. THE EXIT ANIMATION
-    const exitStart = 65;
+    const exitStart = 40;
 
     tl.to(badgeRef.current, {
         opacity: 0,
@@ -132,6 +132,9 @@ export default function HeroSequence() {
         />
 
         <div className="relative z-10 flex flex-col items-center text-center px-4 w-full max-w-7xl pointer-events-none">
+           
+            <img className="w-50 bg-cover p-0" src="./mearksoftnameonly.png" alt="" />
+            
           
           <motion.div
             ref={badgeRef}
@@ -139,6 +142,7 @@ export default function HeroSequence() {
             animate={isLoaded ? { opacity: 1, scale: 1 } : {}}
             className="mb-6 md:mb-10 inline-flex items-center gap-3 px-4 md:px-6 py-2 bg-black/40 backdrop-blur-xl border border-cyan-500/20 rounded-full text-[8px] md:text-[10px] text-cyan-400 font-mono uppercase tracking-[0.4em] shadow-[0_0_15px_rgba(6,182,212,0.1)]"
           >
+            
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
             MearkSoft // System Initialized
           </motion.div>

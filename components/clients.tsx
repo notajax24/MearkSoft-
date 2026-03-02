@@ -99,7 +99,7 @@ export function Clients() {
           
           {/* Stat Card 2 */}
           <div className="p-8 border border-white/10 rounded-xl bg-white/5 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.5)] transition-all hover:-translate-y-2 hover:border-violet-500/50 duration-500 group">
-            <div className="text-4xl md:text-6xl font-primary font-bold text-white group-hover:text-violet-400 transition-colors">4+</div>
+            <div className="text-4xl md:text-6xl font-primary font-bold text-white group-hover:text-violet-400 transition-colors">3+</div>
             <p className="text-xs text-white/50 mt-4 font-mono uppercase tracking-[0.2em]">Years Experience</p>
           </div>
           
